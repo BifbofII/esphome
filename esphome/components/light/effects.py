@@ -62,6 +62,7 @@ CONF_GRADIENT = "gradient"
 CONF_MOVE_INTERVAL = "move_interval"
 CONF_SCAN_WIDTH = "scan_width"
 CONF_TWINKLE_PROBABILITY = "twinkle_probability"
+CONF_BACKGROUND_BRIGHTNESS = "background_brightness"
 CONF_PROGRESS_INTERVAL = "progress_interval"
 CONF_SPARK_PROBABILITY = "spark_probability"
 CONF_USE_RANDOM_COLOR = "use_random_color"
@@ -449,12 +450,14 @@ async def addressable_scan_effect_to_code(config, effect_id):
         cv.Optional(
             CONF_PROGRESS_INTERVAL, default="4ms"
         ): cv.positive_time_period_milliseconds,
+        cv.Optional(CONF_BACKGROUND_BRIGHTNESS, default="0%"): cv.percentage,
     },
 )
 async def addressable_twinkle_effect_to_code(config, effect_id):
     var = cg.new_Pvariable(effect_id, config[CONF_NAME])
     cg.add(var.set_twinkle_probability(config[CONF_TWINKLE_PROBABILITY]))
     cg.add(var.set_progress_interval(config[CONF_PROGRESS_INTERVAL]))
+    cg.add(var.set_background_brightness(config[CONF_BACKGROUND_BRIGHTNESS]))
     return var
 
 

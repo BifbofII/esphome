@@ -205,14 +205,14 @@ class AddressableTwinkleEffect : public AddressableLightEffect {
     for (auto view : addressable) {
       if (view.get_effect_data() != 0) {
         const uint8_t sine = half_sin8(view.get_effect_data());
-        view = current_color * sine;
+        view = current_color * sine * (255 - this->background_brightness_) + this->background_brightness_;
         const uint8_t new_pos = view.get_effect_data() + pos_add;
         if (new_pos < view.get_effect_data())
           view.set_effect_data(0);
         else
           view.set_effect_data(new_pos);
       } else {
-        view = Color::BLACK;
+        view = current_color * this->background_brightness_;
       }
     }
     while (random_float() < this->twinkle_probability_) {
@@ -225,11 +225,15 @@ class AddressableTwinkleEffect : public AddressableLightEffect {
   }
   void set_twinkle_probability(float twinkle_probability) { this->twinkle_probability_ = twinkle_probability; }
   void set_progress_interval(uint32_t progress_interval) { this->progress_interval_ = progress_interval; }
+  void set_background_brightness(float background_brightness) {
+    this->background_brightness_ = 255 * background_brightness;
+  }
 
  protected:
   float twinkle_probability_{0.05f};
   uint32_t progress_interval_{4};
   uint32_t last_progress_{0};
+  uint8_t background_brightness_{0};
 };
 
 class AddressableRandomTwinkleEffect : public AddressableLightEffect {
